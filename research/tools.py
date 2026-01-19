@@ -1,5 +1,4 @@
 import os
-from .models import Paper
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
 from mcp import StdioServerParameters
@@ -13,7 +12,7 @@ os.makedirs(ARXIV_STORAGE_PATH, exist_ok=True)
 mcp_arxiv = McpToolset(
     connection_params=StdioConnectionParams(
         server_params=StdioServerParameters(
-            command='uv',
+            command="uv",
             args=[
                 "tool",
                 "run",
@@ -28,7 +27,7 @@ mcp_arxiv = McpToolset(
 mcp_google_scholar = McpToolset(
     connection_params=StdioConnectionParams(
         server_params=StdioServerParameters(
-            command='uv',
+            command="uv",
             args=[
                 "run",
                 "-m",
