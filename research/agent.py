@@ -42,7 +42,7 @@ arxiv_finder_agent = Agent(
 
     The main goal is to obtain the most useful information from the ArXiv search engine, and return the name of the paper, the year of the paper, the authors of the paper, the abstract of the paper, the link to the paper and how confident you are in the information you found from one to ten. 
 
-    You should use the tools provided to you to find the most relevant information. The output should be a list of papers.
+    You **must** use the tools provided to you to find the most relevant information. The output **must** be a list of papers.
     with the following structure:
     {
         "name": "The name of the paper.",
@@ -65,7 +65,7 @@ google_scholar_finder_agent = Agent(
 
     The main goal is to obtain the most useful information from the Google Scholar search engine, and return the name of the paper, the year of the paper, the authors of the paper, the abstract of the paper, the link to the paper and how confident you are in the information you found from one to ten. 
     
-    You should use the tools provided to you to find the most relevant information. The output should be a list of papers.
+    You **must** use the tools provided to you to find the most relevant information. The output **must** be a list of papers.
     with the following structure:
     {
         "name": "The name of the paper.",
@@ -97,14 +97,19 @@ resume_agent = Agent(
 
     Your idea is to provide a resume of the best information from the papers and why is important to include this information in the answer to the user question.
 
-    The output should be a Resume object with the following structure:
-    {
-        "resume": "The resume of the best information from the papers found from the search engines.",
-        "why_is_important": "Why is important to include this information in the answer to the user question.",
-        "paper": "The paper that contains the best information."
-    }
+    The output should be a list of dictionaries with the following structure:
+    [
+        {
+            "resume": "The resume of the best information from the papers found from the search engines.",
+            "why_is_important": "Why is important to include this information in the answer to the user question.",
+            "paper": "The paper title."
+            "authors": "The authors of the paper."
+            "link": "The link to the paper."
+        },
+    ]
     """,
 )
+
 
 research_agent = SequentialAgent(
     name="ResearchAgent",
