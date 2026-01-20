@@ -4,7 +4,7 @@ from google.adk.agents import SequentialAgent, ParallelAgent
 from .models import Intention
 from .tools import mcp_arxiv, mcp_google_scholar
 
-from prompts import (
+from .prompts import (
     KEYWORD_AGENT_DESCRIPTION,
     KEYWORD_AGENT_INSTRUCTION,
     ARXIV_FINDER_AGENT_DESCRIPTION,
