@@ -23,3 +23,6 @@ wheels/
 *.sqlite3.db-lock
 *.sqlite3.db-lock-shm
 *.sqlite3.db-lock-wal
+
+# Temporary files
+**/tmp/*
