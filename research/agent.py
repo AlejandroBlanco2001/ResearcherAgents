@@ -134,15 +134,13 @@ summarize_answer_agent = Agent(
     instruction=SUMMARIZE_ANSWER_AGENT_INSTRUCTION,
 )
 
-# Main pipeline: sequential flow from intention → research → critique → summary
-# Each agent's output becomes the next agent's input automatically
 root_agent = SequentialAgent(
     name="RootAgent",
     description=ROOT_AGENT_DESCRIPTION,
     sub_agents=[
-        intention_agent,          # 1. Understand user's question
-        research_agent,           # 2. Find and summarize papers
-        parallel_critique_agent,  # 3. Run soft + hard critiques in parallel
+        intention_agent,
+        research_agent,
+        parallel_critique_agent,
         critique_director_agent
         summarize_answer_agent,
     ],
