@@ -2,7 +2,7 @@ from google.adk.agents.llm_agent import Agent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.agents import LoopAgent, SequentialAgent, ParallelAgent
 from .models import Intention
-from .tools import mcp_arxiv, mcp_google_scholar
+from .tools import mcp_arxiv, mcp_google_scholar, evaluate_research_quality
 
 from .prompts import (
     KEYWORD_AGENT_DESCRIPTION,
@@ -18,7 +18,6 @@ from .prompts import (
     INTENTION_AGENT_DESCRIPTION,
     INTENTION_AGENT_INSTRUCTION,
     ROOT_AGENT_DESCRIPTION,
-    ROOT_AGENT_INSTRUCTION,
     CRITIQUE_DIRECTOR_AGENT_DESCRIPTION,
     CRITIQUE_DIRECTOR_AGENT_INSTRUCTION,
     SOFT_CRITIQUE_AGENT_DESCRIPTION,
@@ -91,7 +90,6 @@ hard_critique_agent = Agent(
     instruction=HARD_CRITIQUE_AGENT_INSTRUCTION,
 )
 
-# Run both critiques in parallel
 parallel_critique_agent = ParallelAgent(
     name="ParallelCritiqueAgent",
     description="Run soft and hard critiques in parallel on the papers.",
@@ -101,12 +99,12 @@ parallel_critique_agent = ParallelAgent(
     ],
 )
 
-# LLM agent that reasons about and synthesizes both critiques
 critique_director_agent = Agent(
     model=critque_model,
     name="CritiqueDirectorAgent",
     description=CRITIQUE_DIRECTOR_AGENT_DESCRIPTION,
     instruction=CRITIQUE_DIRECTOR_AGENT_INSTRUCTION,
+    tools=[evaluate_research_quality],
 )
 
 research_agent = SequentialAgent(
@@ -117,6 +115,23 @@ research_agent = SequentialAgent(
         finder_agent,
         resume_agent,
     ],
+)
+
+research_critique_iteration = SequentialAgent(
+    name="ResearchCritiqueIteration",
+    description="One iteration of research and critique evaluation.",
+    sub_agents=[
+        research_agent,
+        parallel_critique_agent,
+        critique_director_agent,
+    ],
+)
+
+research_loop = LoopAgent(
+    name="ResearchLoop",
+    description="Iteratively research and critique until quality threshold is met.",
+    sub_agents=[research_critique_iteration],
+    max_iterations=2,
 )
 
 intention_agent = Agent(
@@ -134,14 +149,13 @@ summarize_answer_agent = Agent(
     instruction=SUMMARIZE_ANSWER_AGENT_INSTRUCTION,
 )
 
+# Main pipeline: intention → research loop (iterates until quality met) → summary
 root_agent = SequentialAgent(
     name="RootAgent",
     description=ROOT_AGENT_DESCRIPTION,
     sub_agents=[
         intention_agent,
-        research_agent,
-        parallel_critique_agent,
-        critique_director_agent
+        research_loop,  # Loops until confidence threshold met or max iterations
         summarize_answer_agent,
     ],
 )

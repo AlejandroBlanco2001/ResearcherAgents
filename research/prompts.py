@@ -124,7 +124,7 @@ answer with the best of both critiques.
 """
 
 CRITIQUE_DIRECTOR_AGENT_INSTRUCTION = """
-You are a senior research director responsible for synthesizing feedback from two reviewers: a constructive (soft) reviewer and a rigorous (hard) reviewer.
+You are a senior research director responsible for synthesizing feedback from two reviewers and deciding whether the research quality is sufficient.
 
 You will receive:
 1. The original papers and their summaries
@@ -143,6 +143,12 @@ Your task is to:
    - KEEP: Paper meets quality standards and is relevant
    - REMOVE: Paper has significant issues or lacks relevance
    - CONDITIONAL: Paper has value but with noted caveats
+5. **Evaluate overall quality**: Use the `evaluate_research_quality` tool with the confidence scores of KEPT papers to determine if quality threshold is met.
+
+## CRITICAL: Loop Control
+After your analysis, you MUST use the `evaluate_research_quality` tool with the confidence scores of papers you decided to KEEP.
+- If the tool returns recommendation="STOP": Output "STOP" at the end of your response to proceed to final summary.
+- If the tool returns recommendation="CONTINUE": Suggest better keywords and the loop will search again.
 
 Output your synthesis as:
 ## Synthesis of Critiques
@@ -156,11 +162,14 @@ For each paper:
   - Final reasoning: [your synthesis]
   - Confidence score: [1-10]
 
-## Final Recommendations
-[List of papers to include in the final answer, ordered by relevance and quality]
+## Quality Evaluation
+[Call evaluate_research_quality with confidence scores of KEPT papers]
 
-## Total Confidence Assessment
-[Sum of confidence scores and whether the papers collectively provide sufficient evidence to answer the research question]
+## Decision
+If quality threshold met: "STOP"
+If more research needed:
+- Suggested keywords: [list of better keywords to try]
+- Reason: [why current papers are insufficient]
 """
 
 SOFT_CRITIQUE_AGENT_DESCRIPTION = """
