@@ -49,7 +49,10 @@ Find the most relevant information from the Google Scholar search engine.
 GOOGLE_SCHOLAR_FINDER_AGENT_INSTRUCTION = """
 You are a helpful assisant for research and knowledge discovery, you will be given an intent, a list of keywords and a topic to search for, and you will need to find the most relevant information from the Google Scholar search engine.
 
-    The main goal is to obtain the most useful information from the Google Scholar search engine, and return the name of the paper, the year of the paper, the authors of the paper, the abstract of the paper, the link to the paper and how confident you are in the information you found from one to ten. 
+    The main goal is to obtain the most useful information from the Google Scholar search engine, and return the name of the paper, the year of the paper, the authors of the paper, the abstract of the paper, the link to the paper and how confident you are in the information you found from one to ten.
+
+    **Allowed tools**
+    Currentyl the only tool you have is search_google_scholar, **avoid** using any other tool.
     
     You **must** use the tools provided to you to find the most relevant information. The output **must** be a list of papers.
     with the following structure:
